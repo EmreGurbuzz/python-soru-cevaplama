@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Bilgi Yarışması</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ question['question'] | safe }}</h5>
+                <form method="post" id="quiz-form">
+                    {% for option in question['options'] %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="option" value="{{ option }}" id="option{{ loop.index }}">
+                            <label class="form-check-label" for="option{{ loop.index }}">
+                                {{ option }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                    <div class="mt-3">
+                        {% if q > 0 %}
+                            <a href="{{ url_for('quiz', q=q-1) }}" class="btn btn-secondary">Geri</a>
+                        {% endif %}
+                        <button type="submit" class="btn btn-primary" id="next-button" disabled>Sonraki</button>
+                        <a href="{{ url_for('quiz', q=q+1) }}" class="btn btn-warning">Atla</a>
+                    </div>
+                </form>
+                <form method="post" action="{{ url_for('finish') }}">
+                    <button type="submit" class="btn btn-danger mt-3">Testi Bitir</button>
+                </form>
+                <div class="mt-3">
+                    <p>Soru {{ q + 1 }} / {{ total }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+    <script>
+        hljs.highlightAll();
+        document.querySelectorAll('input[name="option"]').forEach((input) => {
+            input.addEventListener('change', () => {
+                document.getElementById('next-button').disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
